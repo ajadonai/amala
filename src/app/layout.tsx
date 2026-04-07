@@ -1,15 +1,80 @@
-import type { Metadata } from 'next';
+import type { Metadata, Viewport } from 'next';
 import { ThemeProvider, ThemeScript } from '@/components/ThemeProvider';
 import { Header } from '@/components/Header';
 import { Footer } from '@/components/Footer';
 import { BottomNav } from '@/components/BottomNav';
+import { ScrollToTop } from '@/components/ScrollToTop';
+import { PageTransition } from '@/components/PageTransition';
 import './globals.css';
 
+/* ═══════════════════════════════════════════════════
+   SEO — Global metadata
+   ═══════════════════════════════════════════════════ */
+
+const siteUrl = 'https://amala.vercel.app';
+
 export const metadata: Metadata = {
-  title: 'Amala Okafor — Research & Advocacy',
+  metadataBase: new URL(siteUrl),
+  title: {
+    default: 'Amala Okafor — Research & Advocacy',
+    template: '%s | Amala Okafor',
+  },
   description:
-    'Exploring women\'s negotiation skills, AI equity, and career outcomes through research and advocacy.',
+    "Exploring women's negotiation skills, AI equity, and career outcomes through research and advocacy.",
+  keywords: [
+    'women negotiation',
+    'AI equity',
+    'career outcomes',
+    'gender pay gap',
+    'negotiation research',
+    'Amala Okafor',
+    'women in tech',
+    'workplace advocacy',
+  ],
+  authors: [{ name: 'Amala Okafor' }],
+  creator: 'Amala Okafor',
+  openGraph: {
+    type: 'website',
+    locale: 'en_US',
+    url: siteUrl,
+    siteName: 'Amala Okafor',
+    title: 'Amala Okafor — Research & Advocacy',
+    description:
+      "Exploring women's negotiation skills, AI equity, and career outcomes through research and advocacy.",
+    images: [
+      {
+        url: '/og-image.png',
+        width: 1200,
+        height: 630,
+        alt: 'Amala Okafor — Advancing women through research & technology',
+      },
+    ],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Amala Okafor — Research & Advocacy',
+    description:
+      "Exploring women's negotiation skills, AI equity, and career outcomes.",
+    images: ['/og-image.png'],
+  },
+  robots: {
+    index: true,
+    follow: true,
+  },
 };
+
+export const viewport: Viewport = {
+  themeColor: [
+    { media: '(prefers-color-scheme: light)', color: '#FDF6EC' },
+    { media: '(prefers-color-scheme: dark)', color: '#1A1A2E' },
+  ],
+  width: 'device-width',
+  initialScale: 1,
+};
+
+/* ═══════════════════════════════════════════════════
+   ROOT LAYOUT
+   ═══════════════════════════════════════════════════ */
 
 export default function RootLayout({
   children,
@@ -20,15 +85,19 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning>
       <head>
         <ThemeScript />
+        <link rel="icon" href="/favicon.ico" sizes="any" />
       </head>
       <body className="min-h-screen flex flex-col">
         <ThemeProvider>
           <Header />
           <main className="flex-1">
-            {children}
+            <PageTransition>
+              {children}
+            </PageTransition>
           </main>
           <Footer />
           <BottomNav />
+          <ScrollToTop />
         </ThemeProvider>
       </body>
     </html>

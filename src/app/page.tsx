@@ -1,9 +1,21 @@
+import type { Metadata } from 'next';
 import Link from 'next/link';
 import {
   MailIcon,
   ChevronRightIcon,
   ClipboardCheckIcon,
 } from '@/components/icons';
+
+export const metadata: Metadata = {
+  title: 'Amala Okafor — Research & Advocacy',
+  description:
+    "Amala Okafor is a researcher studying women's negotiation skills, AI equity, and career outcomes. Explore her work, publications, and advocacy.",
+  openGraph: {
+    title: 'Amala Okafor — Research & Advocacy',
+    description:
+      "Advancing women through research & technology. Exploring negotiation, AI equity, and career outcomes.",
+  },
+};
 
 const PILLARS = [
   {
