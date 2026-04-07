@@ -1,11 +1,11 @@
 import type { Metadata } from 'next';
 
 export const metadata: Metadata = {
-  title: 'Share Your Story',
+  title: 'Discussion',
   description:
     'A community space for women to share negotiation experiences, exchange strategies, and support each other anonymously.',
   openGraph: {
-    title: 'Share Your Story | Amala Okafor',
+    title: 'Discussion | Amala Okafor',
     description:
       'Share your negotiation experience anonymously and help other women navigate workplace conversations.',
   },

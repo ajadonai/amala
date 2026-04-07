@@ -13,7 +13,7 @@ const NAV_ITEMS = [
   { href: '/', label: 'About', icon: UserIcon },
   { href: '/articles', label: 'Articles', icon: PenIcon },
   { href: '/survey', label: 'Survey', icon: ClipboardCheckIcon },
-  { href: '/forum', label: 'Stories', icon: MessageCircleIcon },
+  { href: '/forum', label: 'Discussion', icon: MessageCircleIcon },
 ];
 
 export function BottomNav() {

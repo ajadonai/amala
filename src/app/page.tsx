@@ -6,6 +6,7 @@ import {
   ClipboardCheckIcon,
   FileTextIcon,
   HeartIcon,
+  MessageCircleIcon,
 } from '@/components/icons';
 
 export const metadata: Metadata = {
@@ -222,6 +223,41 @@ export default function AboutPage() {
                 Take the survey
               </Link>
             </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ═══════════════════════════════════════════
+          COMMUNITY PREVIEW
+          ═══════════════════════════════════════════ */}
+      <section className="about-section">
+        <div className="container-wide">
+          <p className="section-label">Community</p>
+          <h2 className="section-heading">From the discussion</h2>
+
+          <div className="community-preview">
+            {[
+              { quote: 'I finally asked for a raise after three years. The key was having market data ready.', author: 'Anonymous', tag: 'Salary' },
+              { quote: 'In Lagos, relationships carry more weight. In New York, it\u2019s about leverage. Both require confidence.', author: 'Anonymous', tag: 'Global' },
+              { quote: 'I positioned it as a mutual win. Changed everything about how my manager responded.', author: 'S.M.', tag: 'Strategy' },
+            ].map((item) => (
+              <div key={item.quote} className="community-card card card-static">
+                <p className="community-quote">&ldquo;{item.quote}&rdquo;</p>
+                <p className="community-author">
+                  {item.author}
+                  <span className="community-tag">&ensp;&middot;&ensp;{item.tag}</span>
+                </p>
+              </div>
+            ))}
+          </div>
+
+          <div className="community-footer">
+            <span className="community-stat">8 stories shared &middot; 286 hearts</span>
+            <Link href="/forum" className="btn-outline community-cta">
+              <MessageCircleIcon size={14} />
+              Join the discussion
+              <ChevronRightIcon size={14} />
+            </Link>
           </div>
         </div>
       </section>

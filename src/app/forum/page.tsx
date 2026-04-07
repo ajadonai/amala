@@ -315,7 +315,7 @@ export default function ForumPage() {
             <p className="section-label">Community</p>
             <div className="forum-title-row">
               <MessageCircleIcon size={20} className="forum-title-icon" />
-              <h1 className="forum-page-title">Share Your Story</h1>
+              <h1 className="forum-page-title">Discussion</h1>
             </div>
             <p className="forum-page-desc">
               A safe space for women to share negotiation experiences, exchange
