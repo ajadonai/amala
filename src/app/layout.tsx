@@ -1,5 +1,8 @@
 import type { Metadata } from 'next';
 import { ThemeProvider, ThemeScript } from '@/components/ThemeProvider';
+import { Header } from '@/components/Header';
+import { Footer } from '@/components/Footer';
+import { BottomNav } from '@/components/BottomNav';
 import './globals.css';
 
 export const metadata: Metadata = {
@@ -18,9 +21,14 @@ export default function RootLayout({
       <head>
         <ThemeScript />
       </head>
-      <body>
+      <body className="min-h-screen flex flex-col">
         <ThemeProvider>
-          {children}
+          <Header />
+          <main className="flex-1">
+            {children}
+          </main>
+          <Footer />
+          <BottomNav />
         </ThemeProvider>
       </body>
     </html>
