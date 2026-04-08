@@ -1,0 +1,91 @@
+import { getClient } from './client';
+import {
+  allArticlesQuery,
+  articleBySlugQuery,
+  articleSlugsQuery,
+  siteSettingsQuery,
+} from './queries';
+
+/* ═══════════════════════════════════════════════════
+   TYPES
+   ═══════════════════════════════════════════════════ */
+
+export interface SanityArticle {
+  _id: string;
+  title: string;
+  slug: string;
+  excerpt: string;
+  tag: string;
+  publishedAt: string;
+  readTime: number;
+  featured: boolean;
+  body?: unknown[]; // Portable Text blocks
+}
+
+export interface SiteSettings {
+  surveyUrl: string | null;
+  linkedinUrl: string | null;
+  twitterUrl: string | null;
+  scholarUrl: string | null;
+  resumeUrl: string | null;
+}
+
+/* ═══════════════════════════════════════════════════
+   SANITY CHECK — is CMS configured?
+   ═══════════════════════════════════════════════════ */
+
+function isSanityConfigured(): boolean {
+  return Boolean(process.env.NEXT_PUBLIC_SANITY_PROJECT_ID);
+}
+
+/* ═══════════════════════════════════════════════════
+   FETCHERS (graceful fallback if Sanity isn't set up)
+   ═══════════════════════════════════════════════════ */
+
+export async function getAllArticles(): Promise<SanityArticle[]> {
+  if (!isSanityConfigured()) return [];
+
+  try {
+    const articles = await getClient().fetch<SanityArticle[]>(allArticlesQuery);
+    return articles || [];
+  } catch (error) {
+    console.warn('Sanity fetch failed, using placeholder data:', error);
+    return [];
+  }
+}
+
+export async function getArticleBySlug(slug: string): Promise<SanityArticle | null> {
+  if (!isSanityConfigured()) return null;
+
+  try {
+    const article = await getClient().fetch<SanityArticle | null>(articleBySlugQuery, { slug });
+    return article;
+  } catch (error) {
+    console.warn('Sanity fetch failed for slug:', slug, error);
+    return null;
+  }
+}
+
+export async function getArticleSlugs(): Promise<string[]> {
+  if (!isSanityConfigured()) return [];
+
+  try {
+    const slugs = await getClient().fetch<string[]>(articleSlugsQuery);
+    return slugs || [];
+  } catch (error) {
+    console.warn('Sanity slugs fetch failed:', error);
+    return [];
+  }
+}
+
+export async function getSiteSettings(): Promise<SiteSettings | null> {
+  if (!isSanityConfigured()) return null;
+
+  try {
+    const settings = await getClient().fetch<SiteSettings | null>(siteSettingsQuery);
+    return settings;
+  } catch (error) {
+    console.warn('Sanity settings fetch failed:', error);
+    return null;
+  }
+}
