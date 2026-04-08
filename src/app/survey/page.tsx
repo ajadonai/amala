@@ -77,6 +77,7 @@ const IMPACT_POINTS = [
 
 function FaqItem({ q, a }: { q: string; a: string }) {
   const [open, setOpen] = useState(false);
+  const id = q.replace(/\s+/g, '-').toLowerCase().slice(0, 30);
 
   return (
     <div className="surv-faq-item">
@@ -84,6 +85,8 @@ function FaqItem({ q, a }: { q: string; a: string }) {
         type="button"
         onClick={() => setOpen(!open)}
         className="surv-faq-trigger"
+        aria-expanded={open}
+        aria-controls={`faq-${id}`}
       >
         <span className="surv-faq-question">{q}</span>
         <ChevronDownIcon
@@ -92,6 +95,8 @@ function FaqItem({ q, a }: { q: string; a: string }) {
         />
       </button>
       <div
+        id={`faq-${id}`}
+        role="region"
         className="surv-faq-answer-wrap"
         style={{ maxHeight: open ? '240px' : '0', opacity: open ? 1 : 0 }}
       >
@@ -224,14 +229,6 @@ export default function SurveyPage() {
           </p>
         </div>
       </div>
-
-      {/* Pulse animation */}
-      <style jsx global>{`
-        @keyframes surveyPulse {
-          0%, 100% { opacity: 1; transform: scale(1); }
-          50% { opacity: 0.5; transform: scale(1.3); }
-        }
-      `}</style>
     </div>
   );
 }

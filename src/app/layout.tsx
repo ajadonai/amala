@@ -5,6 +5,7 @@ import { Footer } from '@/components/Footer';
 import { BottomNav } from '@/components/BottomNav';
 import { ScrollToTop } from '@/components/ScrollToTop';
 import { PageTransition } from '@/components/PageTransition';
+import { SkipToContent } from '@/components/SkipToContent';
 import './globals.css';
 
 /* ═══════════════════════════════════════════════════
@@ -86,11 +87,24 @@ export default function RootLayout({
       <head>
         <ThemeScript />
         <link rel="icon" href="/favicon.ico" sizes="any" />
+        {/* Font optimization: preconnect + preload for zero-delay font loading */}
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        <link
+          rel="preload"
+          as="style"
+          href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Source+Sans+3:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400;1,500&display=swap"
+        />
+        <link
+          rel="stylesheet"
+          href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Source+Sans+3:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400;1,500&display=swap"
+        />
       </head>
       <body className="min-h-screen flex flex-col">
         <ThemeProvider>
+          <SkipToContent />
           <Header />
-          <main className="flex-1">
+          <main id="main-content" className="flex-1" tabIndex={-1}>
             <PageTransition>
               {children}
             </PageTransition>

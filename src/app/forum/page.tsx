@@ -148,12 +148,21 @@ function TopicSelect({ value, onChange }: { value: string; onChange: (val: strin
   const [open, setOpen] = useState(false);
   const topics = TOPIC_FILTERS.filter((t) => t !== 'All');
 
+  useEffect(() => {
+    if (!open) return;
+    const handleEsc = (e: KeyboardEvent) => { if (e.key === 'Escape') setOpen(false); };
+    document.addEventListener('keydown', handleEsc);
+    return () => document.removeEventListener('keydown', handleEsc);
+  }, [open]);
+
   return (
     <div className="relative">
       <button
         type="button"
         onClick={() => setOpen(!open)}
         className="input w-full flex items-center justify-between cursor-pointer"
+        aria-haspopup="listbox"
+        aria-expanded={open}
       >
         <span className="flex items-center gap-2">
           <span className="forum-topic-dot" style={{ '--topic-color': TAG_COLORS[value] || 'var(--wine-800)' } as React.CSSProperties} />
@@ -165,11 +174,13 @@ function TopicSelect({ value, onChange }: { value: string; onChange: (val: strin
       {open && (
         <>
           <div className="fixed inset-0 z-10" onClick={() => setOpen(false)} />
-          <div className="forum-dropdown">
+          <div className="forum-dropdown" role="listbox" aria-label="Select topic">
             {topics.map((topic) => (
               <button
                 key={topic}
                 type="button"
+                role="option"
+                aria-selected={value === topic}
                 onClick={() => { onChange(topic); setOpen(false); }}
                 className={`forum-dropdown-item ${value === topic ? 'forum-dropdown-item--active' : ''}`}
               >
@@ -196,8 +207,8 @@ function SuccessToast({ show, onClose }: { show: boolean; onClose: () => void })
   if (!show) return null;
 
   return (
-    <div className="forum-toast">
-      <span className="forum-toast-check">
+    <div className="forum-toast" role="status" aria-live="polite">
+      <span className="forum-toast-check" aria-hidden="true">
         <CheckIcon size={13} />
       </span>
       <span className="forum-toast-text">Story submitted for review!</span>
@@ -379,7 +390,7 @@ export default function ForumPage() {
                     <label className="forum-label">
                       Your story <span className="forum-label-opt">(min. 20 characters)</span>
                     </label>
-                    <textarea placeholder="What happened? What did you learn? Your story can help someone else..." value={storyBody} onChange={(e) => setStoryBody(e.target.value)} rows={4} maxLength={2000} className="input" style={{ resize: 'none', lineHeight: 1.65 }} />
+                    <textarea placeholder="What happened? What did you learn? Your story can help someone else..." value={storyBody} onChange={(e) => setStoryBody(e.target.value)} rows={4} maxLength={2000} className="input" />
                     <div className="forum-char-count">
                       {storyBody.length} / 2,000
                     </div>
@@ -430,7 +441,7 @@ export default function ForumPage() {
                 </button>
               ))}
             </div>
-            <p className="forum-count">
+            <p className="forum-count" aria-live="polite" role="status">
               {filtered.length} {filtered.length === 1 ? 'story' : 'stories'}
               {activeTag !== 'All' && ` in ${activeTag}`}
             </p>
@@ -467,21 +478,6 @@ export default function ForumPage() {
       </div>
 
       <SuccessToast show={showToast} onClose={() => setShowToast(false)} />
-
-      <style jsx global>{`
-        @keyframes forumToastIn {
-          from { opacity: 0; transform: translateX(-50%) translateY(16px); }
-          to   { opacity: 1; transform: translateX(-50%) translateY(0); }
-        }
-        @keyframes forumSpin {
-          from { transform: rotate(0deg); }
-          to   { transform: rotate(360deg); }
-        }
-        @keyframes forumSlideDown {
-          from { opacity: 0; transform: translateY(-8px); }
-          to   { opacity: 1; transform: translateY(0); }
-        }
-      `}</style>
     </>
   );
 }

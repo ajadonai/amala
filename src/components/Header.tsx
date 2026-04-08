@@ -21,7 +21,7 @@ export function Header() {
           Amala Okafor
         </Link>
 
-        <nav className="site-nav">
+        <nav className="site-nav" aria-label="Main navigation">
           {NAV_LINKS.map((link) => {
             const isActive = pathname === link.href;
             return (
@@ -29,6 +29,7 @@ export function Header() {
                 key={link.href}
                 href={link.href}
                 className={`site-nav-link ${isActive ? 'site-nav-link--active' : ''}`}
+                aria-current={isActive ? 'page' : undefined}
               >
                 {link.label}
                 {isActive && <span className="site-nav-indicator" />}

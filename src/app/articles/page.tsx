@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import {
   PenIcon,
   ArrowUpIcon,
@@ -159,6 +159,13 @@ function ArticleThumb({ title, color }: { title: string; color: string }) {
 function ShareMenu({ title }: { title: string }) {
   const [open, setOpen] = useState(false);
 
+  useEffect(() => {
+    if (!open) return;
+    const handleEsc = (e: KeyboardEvent) => { if (e.key === 'Escape') setOpen(false); };
+    document.addEventListener('keydown', handleEsc);
+    return () => document.removeEventListener('keydown', handleEsc);
+  }, [open]);
+
   const handleCopy = () => {
     navigator.clipboard?.writeText(window.location.href).catch(() => {});
     setOpen(false);
@@ -169,21 +176,28 @@ function ShareMenu({ title }: { title: string }) {
 
   return (
     <div className="art-share-wrap">
-      <button type="button" onClick={() => setOpen(!open)} className="art-action art-action--save" aria-label="Share">
+      <button
+        type="button"
+        onClick={() => setOpen(!open)}
+        className="art-action art-action--save"
+        aria-label="Share this article"
+        aria-haspopup="true"
+        aria-expanded={open}
+      >
         <ShareIcon size={13} />
         <span>Share</span>
       </button>
       {open && (
         <>
           <div className="fixed inset-0 z-10" onClick={() => setOpen(false)} />
-          <div className="art-share-dropdown">
-            <a href={`https://twitter.com/intent/tweet?text=${encodedTitle}&url=${encodedUrl}`} target="_blank" rel="noopener noreferrer" className="art-share-item" onClick={() => setOpen(false)}>
+          <div className="art-share-dropdown" role="menu" aria-label="Share options">
+            <a href={`https://twitter.com/intent/tweet?text=${encodedTitle}&url=${encodedUrl}`} target="_blank" rel="noopener noreferrer" className="art-share-item" role="menuitem" onClick={() => setOpen(false)}>
               <TwitterIcon size={13} /> Post on X
             </a>
-            <a href={`https://www.linkedin.com/sharing/share-offsite/?url=${encodedUrl}`} target="_blank" rel="noopener noreferrer" className="art-share-item" onClick={() => setOpen(false)}>
+            <a href={`https://www.linkedin.com/sharing/share-offsite/?url=${encodedUrl}`} target="_blank" rel="noopener noreferrer" className="art-share-item" role="menuitem" onClick={() => setOpen(false)}>
               <LinkedInIcon size={13} /> Share on LinkedIn
             </a>
-            <button type="button" className="art-share-item" onClick={handleCopy}>
+            <button type="button" className="art-share-item" role="menuitem" onClick={handleCopy}>
               <LinkIcon size={13} /> Copy link
             </button>
           </div>
@@ -271,7 +285,7 @@ export default function ArticlesPage() {
               <SearchIcon size={15} />
               <input type="text" placeholder="Search articles..." value={searchQuery} onChange={(e) => handleSearch(e.target.value)} className="input input-with-icon" />
             </div>
-            <p className="art-count">
+            <p className="art-count" aria-live="polite" role="status">
               {filtered.length} article{filtered.length !== 1 ? 's' : ''}
               {activeTag !== 'All' && ` in ${activeTag}`}
             </p>

@@ -28,7 +28,7 @@ export function Footer() {
             </p>
           </div>
 
-          <nav className="footer-nav">
+          <nav className="footer-nav" aria-label="Footer navigation">
             {FOOTER_NAV.map(({ href, label }) => (
               <Link key={href} href={href} className="footer-nav-link">
                 {label}

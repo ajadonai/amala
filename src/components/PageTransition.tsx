@@ -20,13 +20,7 @@ export function PageTransition({ children }: { children: React.ReactNode }) {
   }, [pathname]);
 
   return (
-    <div
-      style={{
-        opacity: isVisible ? 1 : 0,
-        transform: isVisible ? 'translateY(0)' : 'translateY(6px)',
-        transition: 'opacity 300ms ease-out, transform 300ms ease-out',
-      }}
-    >
+    <div className={`page-transition ${isVisible ? 'page-transition--visible' : 'page-transition--entering'}`}>
       {children}
     </div>
   );
