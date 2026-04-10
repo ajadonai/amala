@@ -4,7 +4,6 @@ import {
   MailIcon,
   ChevronRightIcon,
   ClipboardCheckIcon,
-  FileTextIcon,
   HeartIcon,
   MessageCircleIcon,
 } from '@/components/icons';
@@ -262,26 +261,6 @@ export default function AboutPage() {
         </div>
       </section>
 
-      {/* ═══════════════════════════════════════════
-          RESUME / CV
-          ═══════════════════════════════════════════ */}
-      <section className="about-section about-section--last">
-        <div className="container-wide">
-          <p className="section-label">Documents</p>
-          <h2 className="section-heading">Resume / CV</h2>
-
-          <div className="cv-card">
-            <div className="cv-icon-wrap">
-              <FileTextIcon size={20} />
-            </div>
-            <div className="cv-info">
-              <h4 className="cv-title">Curriculum vitae</h4>
-              <p className="cv-subtitle">Downloadable resume coming soon.</p>
-            </div>
-            <span className="cv-badge">Pending</span>
-          </div>
-        </div>
-      </section>
     </div>
   );
 }
