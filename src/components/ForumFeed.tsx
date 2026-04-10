@@ -140,8 +140,9 @@ function StoryCard({ story, isLiked, onToggleLike }: { story: ForumStory; isLike
       <div className="forum-story-meta">
         <Avatar displayName={story.displayName} tag={story.tag} />
         <div className="forum-story-meta-text">
-          <span className="forum-story-name">{story.displayName}</span>
-          <span className="forum-story-time">
+          <span className="forum-story-author">{story.displayName}</span>
+          <span className="forum-story-sep">&middot;</span>
+          <span className="forum-story-date">
             <CalendarIcon size={11} />
             {story.timeAgo}
           </span>
@@ -154,14 +155,14 @@ function StoryCard({ story, isLiked, onToggleLike }: { story: ForumStory; isLike
         <button
           type="button"
           onClick={onToggleLike}
-          className={`forum-heart-btn ${isLiked ? 'forum-heart-btn--active' : ''}`}
+          className={`forum-story-heart ${isLiked ? 'forum-story-heart--active' : ''}`}
         >
           <HeartIcon size={14} />
           <span>{story.hearts + (isLiked ? 1 : 0)}</span>
         </button>
-        <span className="forum-reply-count">
+        <span className="forum-story-replies">
           <MessageCircleIcon size={13} />
-          {story.replies}
+          <span>{story.replies}</span>
         </span>
       </div>
     </article>
