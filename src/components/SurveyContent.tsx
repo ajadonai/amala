@@ -42,7 +42,7 @@ const INFO_CARDS = [
 
 const STATS = [
   { value: '500+', label: 'Responses', icon: UserIcon },
-  { value: '2', label: 'Countries', icon: GlobeIcon },
+  { value: '5', label: 'Countries', icon: GlobeIcon },
   { value: '92%', label: 'Completion', icon: ClipboardCheckIcon },
 ];
 

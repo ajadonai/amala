@@ -2,13 +2,11 @@ import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import type { Metadata } from 'next';
 import { PortableText, type PortableTextBlock } from '@portabletext/react';
+import Markdown from 'react-markdown';
 import { getArticleBySlug, getArticleSlugs } from '@/sanity/lib/fetch';
+import { STATIC_ARTICLES } from '@/data/articles';
 import { urlFor } from '@/sanity/lib/client';
 import { ChevronRightIcon } from '@/components/icons';
-
-/* ═══════════════════════════════════════════════════
-   TAG → ACCENT COLOR MAP
-   ═══════════════════════════════════════════════════ */
 
 const TAG_COLORS: Record<string, string> = {
   'AI & Equity': 'var(--plum)',
@@ -18,10 +16,6 @@ const TAG_COLORS: Record<string, string> = {
   'Women & Work': 'var(--wine-800)',
   Leadership: 'var(--gold)',
 };
-
-/* ═══════════════════════════════════════════════════
-   PORTABLE TEXT COMPONENTS
-   ═══════════════════════════════════════════════════ */
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 const ptComponents: any = {
@@ -65,8 +59,10 @@ const ptComponents: any = {
    ═══════════════════════════════════════════════════ */
 
 export async function generateStaticParams() {
-  const slugs = await getArticleSlugs();
-  return slugs.map((slug) => ({ slug }));
+  const sanitySlugs = await getArticleSlugs();
+  const staticSlugs = STATIC_ARTICLES.map((a) => a.slug);
+  const allSlugs = [...new Set([...sanitySlugs, ...staticSlugs])];
+  return allSlugs.map((slug) => ({ slug }));
 }
 
 /* ═══════════════════════════════════════════════════
@@ -79,19 +75,38 @@ export async function generateMetadata({
   params: Promise<{ slug: string }>;
 }): Promise<Metadata> {
   const { slug } = await params;
-  const article = await getArticleBySlug(slug);
-  if (!article) return { title: 'Article Not Found' };
 
-  return {
-    title: article.title,
-    description: article.excerpt,
-    openGraph: {
-      title: `${article.title} | Women in Focus`,
-      description: article.excerpt,
-      type: 'article',
-      publishedTime: article.publishedAt,
-    },
-  };
+  // Try Sanity first
+  const sanityArticle = await getArticleBySlug(slug);
+  if (sanityArticle) {
+    return {
+      title: sanityArticle.title,
+      description: sanityArticle.excerpt,
+      openGraph: {
+        title: `${sanityArticle.title} | Women in Focus`,
+        description: sanityArticle.excerpt,
+        type: 'article',
+        publishedTime: sanityArticle.publishedAt,
+      },
+    };
+  }
+
+  // Fall back to static
+  const staticArticle = STATIC_ARTICLES.find((a) => a.slug === slug);
+  if (staticArticle) {
+    return {
+      title: staticArticle.title,
+      description: staticArticle.excerpt,
+      openGraph: {
+        title: `${staticArticle.title} | Women in Focus`,
+        description: staticArticle.excerpt,
+        type: 'article',
+        publishedTime: staticArticle.publishedAt,
+      },
+    };
+  }
+
+  return { title: 'Article Not Found' };
 }
 
 /* ═══════════════════════════════════════════════════
@@ -104,17 +119,30 @@ export default async function ArticlePage({
   params: Promise<{ slug: string }>;
 }) {
   const { slug } = await params;
-  const article = await getArticleBySlug(slug);
 
-  if (!article) notFound();
+  // Try Sanity first
+  const sanityArticle = await getArticleBySlug(slug);
 
-  const date = new Date(article.publishedAt).toLocaleDateString('en-US', {
+  // Fall back to static
+  const staticArticle = !sanityArticle
+    ? STATIC_ARTICLES.find((a) => a.slug === slug)
+    : null;
+
+  if (!sanityArticle && !staticArticle) notFound();
+
+  const title = sanityArticle?.title || staticArticle!.title;
+  const excerpt = sanityArticle?.excerpt || staticArticle!.excerpt;
+  const tag = sanityArticle?.tag || staticArticle!.tag;
+  const publishedAt = sanityArticle?.publishedAt || staticArticle!.publishedAt;
+  const readTime = sanityArticle?.readTime || staticArticle!.readTime;
+  const institution = staticArticle?.institution;
+  const color = TAG_COLORS[tag] || 'var(--wine-800)';
+
+  const date = new Date(publishedAt).toLocaleDateString('en-US', {
     year: 'numeric',
     month: 'long',
     day: 'numeric',
   });
-
-  const color = TAG_COLORS[article.tag] || 'var(--wine-800)';
 
   return (
     <div className="articles-page">
@@ -125,7 +153,7 @@ export default async function ArticlePage({
             Articles
           </Link>
           <ChevronRightIcon size={12} />
-          <span className="article-breadcrumb-current">{article.tag}</span>
+          <span className="article-breadcrumb-current">{tag}</span>
         </nav>
 
         {/* Header */}
@@ -135,33 +163,41 @@ export default async function ArticlePage({
             style={{ '--tag-color': color } as React.CSSProperties}
           >
             <span className="art-tag-dot" />
-            {article.tag}
+            {tag}
           </span>
 
-          <h1 className="article-title">{article.title}</h1>
+          <h1 className="article-title">{title}</h1>
 
-          <p className="article-excerpt">{article.excerpt}</p>
+          <p className="article-excerpt">{excerpt}</p>
 
           <div className="article-meta-bar">
             <span className="article-author">Amala Okafor</span>
+            {institution && (
+              <>
+                <span className="article-meta-sep">&middot;</span>
+                <span>{institution}</span>
+              </>
+            )}
             <span className="article-meta-sep">&middot;</span>
-            <time dateTime={article.publishedAt}>{date}</time>
+            <time dateTime={publishedAt}>{date}</time>
             <span className="article-meta-sep">&middot;</span>
-            <span>{article.readTime} min read</span>
+            <span>{readTime} min read</span>
           </div>
         </header>
 
         {/* Body */}
-        {article.body && (
-          <div className="article-body">
-            <PortableText value={article.body as PortableTextBlock[]} components={ptComponents} />
-          </div>
-        )}
+        <div className="article-body">
+          {sanityArticle?.body ? (
+            <PortableText value={sanityArticle.body as PortableTextBlock[]} components={ptComponents} />
+          ) : staticArticle?.body ? (
+            <Markdown>{staticArticle.body}</Markdown>
+          ) : null}
+        </div>
 
         {/* Footer nav */}
         <footer className="article-footer-nav">
           <Link href="/articles" className="btn-outline">
-            ← Back to articles
+            &larr; Back to articles
           </Link>
         </footer>
       </article>

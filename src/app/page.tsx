@@ -42,7 +42,7 @@ const PILLARS = [
 const STATS = [
   { value: '6+', label: 'Publications' },
   { value: '500+', label: 'Survey responses' },
-  { value: '2', label: 'Countries' },
+  { value: '5', label: 'Countries' },
   { value: '1', label: 'Mission' },
 ];
 
