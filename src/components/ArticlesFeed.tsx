@@ -252,8 +252,8 @@ export function ArticlesFeed({ articles }: { articles: ArticleItem[] }) {
           {/* Featured */}
           {featured && (
             <article className="art-featured">
-              <ArticleLink slug={featured.slug}>
-                <div className="art-featured-content">
+              <div className="art-featured-content">
+                <ArticleLink slug={featured.slug}>
                   <span className="art-featured-badge"><StarIcon size={11} /> Featured</span>
                   <div className="art-card-meta">
                     <TagPill tag={featured.tag} />
@@ -261,9 +261,9 @@ export function ArticlesFeed({ articles }: { articles: ArticleItem[] }) {
                   </div>
                   <h2 className="art-featured-title">{featured.title}</h2>
                   <p className="art-featured-excerpt">{featured.excerpt}</p>
-                </div>
-              </ArticleLink>
-              <ArticleActions article={featured} />
+                </ArticleLink>
+                <ArticleActions article={featured} />
+              </div>
               <ArticleThumb title={featured.title} color={featured.color} />
             </article>
           )}

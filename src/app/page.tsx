@@ -90,8 +90,8 @@ export default function AboutPage() {
               </h1>
 
               <p className="hero-body">
-                I study how women negotiate, how AI shapes career equity, and
-                what it takes to close the gap. My work bridges data, lived
+                We study how women negotiate, how AI shapes career equity, and
+                what it takes to close the gap. Our work bridges data, lived
                 experience, and policy.
               </p>
 
@@ -101,7 +101,7 @@ export default function AboutPage() {
                   Get in touch
                 </a>
                 <Link href="/articles" className="btn-outline">
-                  Read my work
+                  Read our work
                   <ChevronRightIcon size={15} />
                 </Link>
               </div>
@@ -177,7 +177,7 @@ export default function AboutPage() {
       <section className="about-section">
         <div className="container-wide">
           <p className="section-label">Themes</p>
-          <h2 className="section-heading">What I write about</h2>
+          <h2 className="section-heading">Our Workstreams</h2>
 
           <div className="themes-grid">
             {FOCUS_AREAS.map((a) => (

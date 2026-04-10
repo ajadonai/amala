@@ -3062,9 +3062,11 @@ html { scroll-behavior: smooth; }
 }
 
 .art-featured {
+  position: relative;
   display: flex;
-  gap: 1.5rem;
-  align-items: flex-start;
+  flex-direction: column;
+  gap: 1rem;
+  align-items: stretch;
 }
 
 .art-featured-content {
@@ -3073,8 +3075,7 @@ html { scroll-behavior: smooth; }
 }
 
 .art-featured .art-thumb {
-  width: 88px;
-  height: 88px;
+  display: none;
 }
 
 /* ─── Share dropdown ─── */
@@ -3124,9 +3125,17 @@ html { scroll-behavior: smooth; }
     display: block;
   }
 
+  .art-featured {
+    flex-direction: row;
+    gap: 1.5rem;
+    align-items: flex-start;
+  }
+
   .art-featured .art-thumb {
+    display: block;
     width: 100px;
     height: 100px;
+    flex-shrink: 0;
   }
 }
 
@@ -3656,4 +3665,12 @@ html { scroll-behavior: smooth; }
   display: block;
   border: none;
   min-height: 600px;
+}
+
+/* Article footer actions row */
+.article-footer-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  align-items: center;
 }

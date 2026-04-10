@@ -7,6 +7,7 @@ import { getArticleBySlug, getArticleSlugs } from '@/sanity/lib/fetch';
 import { STATIC_ARTICLES } from '@/data/articles';
 import { urlFor } from '@/sanity/lib/client';
 import { ChevronRightIcon } from '@/components/icons';
+import { ArticleDownloadButton } from '@/components/ArticleDownloadButton';
 
 const TAG_COLORS: Record<string, string> = {
   'AI & Equity': 'var(--plum)',
@@ -196,9 +197,12 @@ export default async function ArticlePage({
 
         {/* Footer nav */}
         <footer className="article-footer-nav">
-          <Link href="/articles" className="btn-outline">
-            &larr; Back to articles
-          </Link>
+          <div className="article-footer-actions">
+            <Link href="/articles" className="btn-outline">
+              &larr; Back to articles
+            </Link>
+            <ArticleDownloadButton />
+          </div>
         </footer>
       </article>
     </div>
