@@ -6,4 +6,7 @@ export default defineCliConfig({
     dataset: 'production',
   },
   studioHost: 'womeninfocus',
+  deployment: {
+    appId: 'tqdcgozn79bq5srck2unujjo',
+  },
 });
