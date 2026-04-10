@@ -1,10 +1,13 @@
 import type { MetadataRoute } from 'next';
+import { STATIC_ARTICLES } from '@/data/articles';
+import { getArticleSlugs } from '@/sanity/lib/fetch';
 
-export default function sitemap(): MetadataRoute.Sitemap {
+export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const baseUrl = 'https://womeninfocus.ng';
   const now = new Date().toISOString();
 
-  return [
+  // Static pages
+  const pages: MetadataRoute.Sitemap = [
     {
       url: baseUrl,
       lastModified: now,
@@ -30,4 +33,31 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 0.7,
     },
   ];
+
+  // Static article pages
+  for (const article of STATIC_ARTICLES) {
+    pages.push({
+      url: `${baseUrl}/articles/${article.slug}`,
+      lastModified: article.publishedAt,
+      changeFrequency: 'monthly',
+      priority: 0.8,
+    });
+  }
+
+  // CMS article pages
+  try {
+    const cmsSlugs = await getArticleSlugs();
+    for (const slug of cmsSlugs) {
+      pages.push({
+        url: `${baseUrl}/articles/${slug}`,
+        lastModified: now,
+        changeFrequency: 'weekly',
+        priority: 0.8,
+      });
+    }
+  } catch {
+    // Sanity not configured — skip CMS articles
+  }
+
+  return pages;
 }
