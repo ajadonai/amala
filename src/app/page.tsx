@@ -7,6 +7,8 @@ import {
   HeartIcon,
   MessageCircleIcon,
 } from '@/components/icons';
+import { getSiteSettings, getForumStats, getArticleCount } from '@/sanity/lib/fetch';
+import { STATIC_ARTICLES } from '@/data/articles';
 
 export const metadata: Metadata = {
   title: 'Women in Focus — Research & Advocacy',
@@ -17,6 +19,8 @@ export const metadata: Metadata = {
     description: "Advancing women through research & technology.",
   },
 };
+
+export const revalidate = 60;
 
 const PILLARS = [
   {
@@ -37,13 +41,6 @@ const PILLARS = [
     desc: 'Translating research into actionable frameworks, workshops, and policy recommendations that empower women at every career stage.',
     accent: 'var(--gold)',
   },
-];
-
-const STATS = [
-  { value: '6+', label: 'Publications' },
-  { value: '500+', label: 'Survey responses' },
-  { value: '5', label: 'Countries' },
-  { value: '1', label: 'Mission' },
 ];
 
 const FOCUS_AREAS = [
@@ -69,7 +66,29 @@ const FOCUS_AREAS = [
   },
 ];
 
-export default function AboutPage() {
+export default async function HomePage() {
+  const [settings, forumStats, cmsArticleCount] = await Promise.all([
+    getSiteSettings(),
+    getForumStats(),
+    getArticleCount(),
+  ]);
+
+  // Dynamic stats
+  const totalArticles = cmsArticleCount + STATIC_ARTICLES.length;
+  const publicationCount = totalArticles > 0 ? `${totalArticles}+` : '3+';
+  const surveyResponses = settings?.surveyResponses || '500+';
+  const surveyCountries = settings?.surveyCountries || '5';
+
+  const storyCount = forumStats.postCount > 0 ? forumStats.postCount : 8;
+  const heartCount = forumStats.totalHearts > 0 ? forumStats.totalHearts : 286;
+
+  const STATS = [
+    { value: publicationCount, label: 'Publications' },
+    { value: surveyResponses, label: 'Survey responses' },
+    { value: surveyCountries, label: 'Countries' },
+    { value: '1', label: 'Mission' },
+  ];
+
   return (
     <div className="about-page">
       {/* ═══════════════════════════════════════════
@@ -78,10 +97,9 @@ export default function AboutPage() {
       <section className="hero-section">
         <div className="container-wide hero-inner">
           <div className="hero-grid">
-            {/* Left — Copy */}
             <div className="hero-copy">
               <p className="section-label hero-label">
-                Researcher&ensp;·&ensp;Advocate&ensp;·&ensp;Writer
+                Research&ensp;·&ensp;Policy&ensp;·&ensp;Advocacy
               </p>
 
               <h1 className="hero-heading">
@@ -107,7 +125,6 @@ export default function AboutPage() {
               </div>
             </div>
 
-            {/* Right — Quote Card (desktop only) */}
             <aside className="hero-quote-wrapper">
               <div className="hero-quote-shadow" />
               <blockquote className="hero-quote">
@@ -118,8 +135,8 @@ export default function AboutPage() {
                   the workforce.
                 </p>
                 <footer className="hero-quote-footer">
-                  <p className="hero-quote-name">Amala Okafor</p>
-                  <p className="hero-quote-role">Researcher &amp; Advocate</p>
+                  <p className="hero-quote-name">Women in Focus</p>
+                  <p className="hero-quote-role">Research &amp; Advocacy</p>
                 </footer>
               </blockquote>
             </aside>
@@ -172,7 +189,7 @@ export default function AboutPage() {
       </section>
 
       {/* ═══════════════════════════════════════════
-          WHAT I WRITE ABOUT
+          OUR WORKSTREAMS
           ═══════════════════════════════════════════ */}
       <section className="about-section">
         <div className="container-wide">
@@ -251,7 +268,7 @@ export default function AboutPage() {
           </div>
 
           <div className="community-footer">
-            <span className="community-stat">8 stories shared &middot; 286 hearts</span>
+            <span className="community-stat">{storyCount} stories shared &middot; {heartCount} hearts</span>
             <Link href="/forum" className="btn-outline community-cta">
               <MessageCircleIcon size={14} />
               Join the discussion

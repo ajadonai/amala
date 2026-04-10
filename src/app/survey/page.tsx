@@ -5,7 +5,13 @@ export const revalidate = 60;
 
 export default async function SurveyPage() {
   const settings = await getSiteSettings();
-  const surveyUrl = settings?.surveyUrl || null;
 
-  return <SurveyContent surveyUrl={surveyUrl} />;
+  return (
+    <SurveyContent
+      surveyUrl={settings?.surveyUrl || null}
+      surveyResponses={settings?.surveyResponses || '500+'}
+      surveyCountries={settings?.surveyCountries || '5'}
+      surveyCompletion={settings?.surveyCompletion || '92%'}
+    />
+  );
 }

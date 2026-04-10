@@ -40,6 +40,10 @@ export const articleSlugsQuery = groq`
   *[_type == "article" && defined(slug.current)][].slug.current
 `;
 
+export const articleCountQuery = groq`
+  count(*[_type == "article"])
+`;
+
 // ── Site Settings ──
 
 export const siteSettingsQuery = groq`
@@ -48,7 +52,10 @@ export const siteSettingsQuery = groq`
     linkedinUrl,
     twitterUrl,
     scholarUrl,
-    "resumeUrl": resumeFile.asset->url
+    "resumeUrl": resumeFile.asset->url,
+    surveyResponses,
+    surveyCountries,
+    surveyCompletion
   }
 `;
 

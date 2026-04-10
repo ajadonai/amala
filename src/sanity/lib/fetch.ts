@@ -3,6 +3,7 @@ import {
   allArticlesQuery,
   articleBySlugQuery,
   articleSlugsQuery,
+  articleCountQuery,
   siteSettingsQuery,
   allForumPostsQuery,
   forumPostCountQuery,
@@ -31,6 +32,9 @@ export interface SiteSettings {
   twitterUrl: string | null;
   scholarUrl: string | null;
   resumeUrl: string | null;
+  surveyResponses: string | null;
+  surveyCountries: string | null;
+  surveyCompletion: string | null;
 }
 
 export interface SanityForumPost {
@@ -132,5 +136,17 @@ export async function getForumStats(): Promise<ForumStats> {
   } catch (error) {
     console.warn('Sanity forum stats fetch failed:', error);
     return { postCount: 0, totalHearts: 0 };
+  }
+}
+
+export async function getArticleCount(): Promise<number> {
+  if (!isSanityConfigured()) return 0;
+
+  try {
+    const count = await getClient().fetch<number>(articleCountQuery);
+    return count || 0;
+  } catch (error) {
+    console.warn('Sanity article count fetch failed:', error);
+    return 0;
   }
 }

@@ -40,12 +40,6 @@ const INFO_CARDS = [
   },
 ];
 
-const STATS = [
-  { value: '500+', label: 'Responses', icon: UserIcon },
-  { value: '5', label: 'Countries', icon: GlobeIcon },
-  { value: '92%', label: 'Completion', icon: ClipboardCheckIcon },
-];
-
 const FAQ_ITEMS = [
   {
     q: 'Who can take this survey?',
@@ -110,7 +104,23 @@ function FaqItem({ q, a }: { q: string; a: string }) {
    MAIN CONTENT
    ═══════════════════════════════════════════════════ */
 
-export function SurveyContent({ surveyUrl }: { surveyUrl: string | null }) {
+export function SurveyContent({
+  surveyUrl,
+  surveyResponses,
+  surveyCountries,
+  surveyCompletion,
+}: {
+  surveyUrl: string | null;
+  surveyResponses: string;
+  surveyCountries: string;
+  surveyCompletion: string;
+}) {
+  const STATS = [
+    { value: surveyResponses, label: 'Responses', icon: UserIcon },
+    { value: surveyCountries, label: 'Countries', icon: GlobeIcon },
+    { value: surveyCompletion, label: 'Completion', icon: ClipboardCheckIcon },
+  ];
+
   return (
     <div className="survey-page">
       <div className="container-narrow">
