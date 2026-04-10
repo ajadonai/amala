@@ -22,7 +22,10 @@ export function Footer() {
         {/* Top row — branding + nav + socials */}
         <div className="footer-top">
           <div className="footer-brand">
-            <p className="footer-name">Women in Focus</p>
+            <p className="footer-name">
+              <span>Women in Focus</span>
+              <span className="site-logo-dot" aria-hidden="true" />
+            </p>
             <p className="footer-tagline">
               Advancing women through research&nbsp;&amp;&nbsp;technology.
             </p>

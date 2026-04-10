@@ -17,8 +17,9 @@ export function Header() {
   return (
     <header className="site-header">
       <div className="container-wide site-header-inner">
-        <Link href="/" className="site-logo">
-          Women in Focus
+        <Link href="/" className="site-logo" aria-label="Women in Focus — Home">
+          <span className="site-logo-text">Women in Focus</span>
+          <span className="site-logo-dot" aria-hidden="true" />
         </Link>
 
         <nav className="site-nav" aria-label="Main navigation">
