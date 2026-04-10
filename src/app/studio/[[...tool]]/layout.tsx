@@ -1,6 +1,6 @@
 export const metadata = {
-  title: 'Amala Okafor — CMS Studio',
-  description: 'Content management for amala.vercel.app',
+  title: 'Women in Focus — CMS Studio',
+  description: 'Content management for womeninfocus.ng',
 };
 
 export default function StudioLayout({ children }: { children: React.ReactNode }) {

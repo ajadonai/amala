@@ -5,7 +5,7 @@ export const metadata: Metadata = {
   description:
     'A community space for women to share negotiation experiences, exchange strategies, and support each other anonymously.',
   openGraph: {
-    title: 'Discussion | Amala Okafor',
+    title: 'Discussion | Women in Focus',
     description:
       'Share your negotiation experience anonymously and help other women navigate workplace conversations.',
   },

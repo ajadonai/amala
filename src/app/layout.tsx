@@ -12,13 +12,13 @@ import './globals.css';
    SEO — Global metadata
    ═══════════════════════════════════════════════════ */
 
-const siteUrl = 'https://amala.vercel.app';
+const siteUrl = 'https://womeninfocus.ng';
 
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
   title: {
-    default: 'Amala Okafor — Research & Advocacy',
-    template: '%s | Amala Okafor',
+    default: 'Women in Focus — Research & Advocacy',
+    template: '%s | Women in Focus',
   },
   description:
     "Exploring women's negotiation skills, AI equity, and career outcomes through research and advocacy.",
@@ -28,7 +28,7 @@ export const metadata: Metadata = {
     'career outcomes',
     'gender pay gap',
     'negotiation research',
-    'Amala Okafor',
+    'Women in Focus',
     'women in tech',
     'workplace advocacy',
   ],
@@ -38,8 +38,8 @@ export const metadata: Metadata = {
     type: 'website',
     locale: 'en_US',
     url: siteUrl,
-    siteName: 'Amala Okafor',
-    title: 'Amala Okafor — Research & Advocacy',
+    siteName: 'Women in Focus',
+    title: 'Women in Focus — Research & Advocacy',
     description:
       "Exploring women's negotiation skills, AI equity, and career outcomes through research and advocacy.",
     images: [
@@ -47,13 +47,13 @@ export const metadata: Metadata = {
         url: '/og-image.png',
         width: 1200,
         height: 630,
-        alt: 'Amala Okafor — Advancing women through research & technology',
+        alt: 'Women in Focus — Advancing women through research & technology',
       },
     ],
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Amala Okafor — Research & Advocacy',
+    title: 'Women in Focus — Research & Advocacy',
     description:
       "Exploring women's negotiation skills, AI equity, and career outcomes.",
     images: ['/og-image.png'],

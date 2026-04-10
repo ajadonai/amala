@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://amala.vercel.app/sitemap.xml
+Sitemap: https://womeninfocus.ng/sitemap.xml

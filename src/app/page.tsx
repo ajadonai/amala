@@ -9,11 +9,11 @@ import {
 } from '@/components/icons';
 
 export const metadata: Metadata = {
-  title: 'Amala Okafor — Research & Advocacy',
+  title: 'Women in Focus — Research & Advocacy',
   description:
-    "Amala Okafor is a researcher studying women's negotiation skills, AI equity, and career outcomes.",
+    "Women in Focus explores women's negotiation skills, AI equity, and career outcomes through research and advocacy.",
   openGraph: {
-    title: 'Amala Okafor — Research & Advocacy',
+    title: 'Women in Focus — Research & Advocacy',
     description: "Advancing women through research & technology.",
   },
 };

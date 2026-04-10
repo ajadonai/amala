@@ -108,7 +108,7 @@ function ShareMenu({ title }: { title: string }) {
     setOpen(false);
   };
 
-  const encodedTitle = encodeURIComponent(title + ' — Amala Okafor');
+  const encodedTitle = encodeURIComponent(title + ' — Women in Focus');
   const encodedUrl = typeof window !== 'undefined' ? encodeURIComponent(window.location.href) : '';
 
   return (

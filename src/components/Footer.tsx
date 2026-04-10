@@ -22,7 +22,7 @@ export function Footer() {
         {/* Top row — branding + nav + socials */}
         <div className="footer-top">
           <div className="footer-brand">
-            <p className="footer-name">Amala Okafor</p>
+            <p className="footer-name">Women in Focus</p>
             <p className="footer-tagline">
               Advancing women through research&nbsp;&amp;&nbsp;technology.
             </p>
@@ -51,7 +51,7 @@ export function Footer() {
         {/* Bottom bar */}
         <div className="footer-bottom">
           <p className="footer-copy">
-            &copy; {new Date().getFullYear()} Amala Okafor
+            &copy; {new Date().getFullYear()} Women in Focus
           </p>
           <p className="footer-built">Built with intention.</p>
         </div>

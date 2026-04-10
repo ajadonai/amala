@@ -1,5 +1,5 @@
 /**
- * Amala Okafor — Design Tokens
+ * Women in Focus — Design Tokens
  * 
  * Wine-forward palette, cream/charcoal for light/dark modes.
  * Playfair Display (headings), Source Sans 3 (body), JetBrains Mono (code).

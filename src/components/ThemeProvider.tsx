@@ -26,7 +26,7 @@ export function ThemeScript() {
   const script = `
     (function() {
       try {
-        var t = localStorage.getItem('amala-theme');
+        var t = localStorage.getItem('wif-theme');
         if (t === 'dark' || (!t && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
           document.documentElement.setAttribute('data-theme', 'dark');
         }
@@ -42,7 +42,7 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
 
   useEffect(() => {
     setMounted(true);
-    const stored = localStorage.getItem('amala-theme') as Theme | null;
+    const stored = localStorage.getItem('wif-theme') as Theme | null;
     if (stored) {
       setTheme(stored);
       document.documentElement.setAttribute('data-theme', stored);
@@ -55,7 +55,7 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
   const toggleTheme = useCallback(() => {
     setTheme(prev => {
       const next = prev === 'light' ? 'dark' : 'light';
-      localStorage.setItem('amala-theme', next);
+      localStorage.setItem('wif-theme', next);
       document.documentElement.setAttribute('data-theme', next);
       return next;
     });

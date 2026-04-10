@@ -86,7 +86,7 @@ export async function generateMetadata({
     title: article.title,
     description: article.excerpt,
     openGraph: {
-      title: `${article.title} | Amala Okafor`,
+      title: `${article.title} | Women in Focus`,
       description: article.excerpt,
       type: 'article',
       publishedTime: article.publishedAt,

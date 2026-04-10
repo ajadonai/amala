@@ -18,7 +18,7 @@ export function Header() {
     <header className="site-header">
       <div className="container-wide site-header-inner">
         <Link href="/" className="site-logo">
-          Amala Okafor
+          Women in Focus
         </Link>
 
         <nav className="site-nav" aria-label="Main navigation">
