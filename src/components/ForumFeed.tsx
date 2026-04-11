@@ -169,39 +169,56 @@ function SuccessToast({ show, onClose }: { show: boolean; onClose: () => void })
 }
 
 /* ═══════════════════════════════════════════════════
-   COMMENT SECTION
+   COMMENT TOGGLE (button only — lives in actions row)
    ═══════════════════════════════════════════════════ */
 
-function CommentSection({ postId, commentCount }: { postId: string; commentCount: number }) {
-  const [open, setOpen] = useState(false);
+function CommentToggle({
+  commentCount,
+  isOpen,
+  onToggle,
+}: {
+  commentCount: number;
+  isOpen: boolean;
+  onToggle: () => void;
+}) {
+  return (
+    <button
+      type="button"
+      onClick={onToggle}
+      className={`forum-story-replies ${isOpen ? 'forum-story-replies--active' : ''}`}
+    >
+      <MessageCircleIcon size={13} />
+      <span>{commentCount}</span>
+      <ChevronDownIcon size={11} className={`forum-replies-chevron ${isOpen ? 'forum-replies-chevron--open' : ''}`} />
+    </button>
+  );
+}
+
+/* ═══════════════════════════════════════════════════
+   COMMENT PANEL (expandable — renders below actions)
+   ═══════════════════════════════════════════════════ */
+
+function CommentPanel({ postId }: { postId: string }) {
   const [comments, setComments] = useState<Comment[]>([]);
-  const [loading, setLoading] = useState(false);
-  const [loaded, setLoaded] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [commentBody, setCommentBody] = useState('');
   const [commentName, setCommentName] = useState('');
   const [submitting, setSubmitting] = useState(false);
-  const [localCount, setLocalCount] = useState(commentCount);
 
-  const fetchComments = useCallback(async () => {
-    if (loaded) return;
-    setLoading(true);
-    try {
-      const res = await fetch(`/api/forum/comments?postId=${postId}`);
-      if (res.ok) {
-        const data = await res.json();
-        setComments(data.comments || []);
-        setLocalCount(data.comments?.length || 0);
-      }
-    } catch { /* ignore */ }
-    setLoading(false);
-    setLoaded(true);
-  }, [postId, loaded]);
-
-  const handleToggle = () => {
-    const next = !open;
-    setOpen(next);
-    if (next && !loaded) fetchComments();
-  };
+  useEffect(() => {
+    let cancelled = false;
+    (async () => {
+      try {
+        const res = await fetch(`/api/forum/comments?postId=${postId}`);
+        if (res.ok && !cancelled) {
+          const data = await res.json();
+          setComments(data.comments || []);
+        }
+      } catch { /* ignore */ }
+      if (!cancelled) setLoading(false);
+    })();
+    return () => { cancelled = true; };
+  }, [postId]);
 
   const handleSubmit = async () => {
     if (!commentBody.trim() || commentBody.trim().length < 2) return;
@@ -219,7 +236,6 @@ function CommentSection({ postId, commentCount }: { postId: string; commentCount
       if (res.ok) {
         const data = await res.json();
         setComments(prev => [...prev, data.comment]);
-        setLocalCount(prev => prev + 1);
         setCommentBody('');
       }
     } catch { /* ignore */ }
@@ -227,80 +243,65 @@ function CommentSection({ postId, commentCount }: { postId: string; commentCount
   };
 
   return (
-    <div className="forum-comments-section">
-      <button
-        type="button"
-        onClick={handleToggle}
-        className={`forum-story-replies ${open ? 'forum-story-replies--active' : ''}`}
-      >
-        <MessageCircleIcon size={13} />
-        <span>{localCount}</span>
-        <ChevronDownIcon size={11} className={`forum-replies-chevron ${open ? 'forum-replies-chevron--open' : ''}`} />
-      </button>
-
-      {open && (
-        <div className="forum-comments-body">
-          {loading && (
-            <div className="forum-comments-loading">
-              <span className="forum-spinner" /> Loading comments...
-            </div>
-          )}
-
-          {!loading && comments.length === 0 && (
-            <p className="forum-comments-empty">No comments yet. Be the first to respond.</p>
-          )}
-
-          {comments.map((c) => (
-            <div key={c._id} className="forum-comment">
-              <MiniAvatar displayName={c.displayName || 'Anonymous'} />
-              <div className="forum-comment-content">
-                <div className="forum-comment-meta">
-                  <span className="forum-comment-author">{c.displayName || 'Anonymous'}</span>
-                  <span className="forum-comment-time">{commentTimeAgo(c.createdAt)}</span>
-                </div>
-                <p className="forum-comment-body">{c.body}</p>
-              </div>
-            </div>
-          ))}
-
-          {/* Comment input */}
-          <div className="forum-comment-input-wrap">
-            <input
-              type="text"
-              placeholder="Name (optional)"
-              value={commentName}
-              onChange={(e) => setCommentName(e.target.value)}
-              maxLength={30}
-              className="forum-comment-name-input"
-            />
-            <div className="forum-comment-input-row">
-              <input
-                type="text"
-                placeholder="Write a comment..."
-                value={commentBody}
-                onChange={(e) => setCommentBody(e.target.value)}
-                maxLength={1000}
-                className="forum-comment-text-input"
-                onKeyDown={(e) => {
-                  if (e.key === 'Enter' && !e.shiftKey && commentBody.trim().length >= 2) {
-                    e.preventDefault();
-                    handleSubmit();
-                  }
-                }}
-              />
-              <button
-                type="button"
-                onClick={handleSubmit}
-                disabled={commentBody.trim().length < 2 || submitting}
-                className={`forum-comment-send ${commentBody.trim().length >= 2 && !submitting ? 'forum-comment-send--active' : ''}`}
-                aria-label="Send comment"
-              >
-                {submitting ? <span className="forum-spinner forum-spinner--sm" /> : <SendIcon size={13} />}
-              </button>
-            </div>
-          </div>
+    <div className="forum-comments-panel">
+      {loading && (
+        <div className="forum-comments-loading">
+          <span className="forum-spinner" /> Loading...
         </div>
       )}
+
+      {!loading && comments.length === 0 && (
+        <p className="forum-comments-empty">No comments yet. Be the first to respond.</p>
+      )}
+
+      {comments.map((c) => (
+        <div key={c._id} className="forum-comment">
+          <MiniAvatar displayName={c.displayName || 'Anonymous'} />
+          <div className="forum-comment-content">
+            <div className="forum-comment-meta">
+              <span className="forum-comment-author">{c.displayName || 'Anonymous'}</span>
+              <span className="forum-comment-time">{commentTimeAgo(c.createdAt)}</span>
+            </div>
+            <p className="forum-comment-body">{c.body}</p>
+          </div>
+        </div>
+      ))}
+
+      <div className="forum-comment-input-wrap">
+        <input
+          type="text"
+          placeholder="Name (optional)"
+          value={commentName}
+          onChange={(e) => setCommentName(e.target.value)}
+          maxLength={30}
+          className="forum-comment-name-input"
+        />
+        <div className="forum-comment-input-row">
+          <input
+            type="text"
+            placeholder="Write a comment..."
+            value={commentBody}
+            onChange={(e) => setCommentBody(e.target.value)}
+            maxLength={1000}
+            className="forum-comment-text-input"
+            onKeyDown={(e) => {
+              if (e.key === 'Enter' && !e.shiftKey && commentBody.trim().length >= 2) {
+                e.preventDefault();
+                handleSubmit();
+              }
+            }}
+          />
+          <button
+            type="button"
+            onClick={handleSubmit}
+            disabled={commentBody.trim().length < 2 || submitting}
+            className={`forum-comment-send ${commentBody.trim().length >= 2 && !submitting ? 'forum-comment-send--active' : ''}`}
+            aria-label="Send comment"
+          >
+            {submitting ? <span className="forum-spinner forum-spinner--sm" /> : <SendIcon size={13} />}
+          </button>
+        </div>
+      </div>
     </div>
   );
 }
@@ -320,6 +321,8 @@ function StoryCard({
   onToggleLike: () => void;
   heartCount: number;
 }) {
+  const [commentsOpen, setCommentsOpen] = useState(false);
+
   return (
     <article className="forum-story-card">
       <div className="forum-story-meta">
@@ -345,8 +348,15 @@ function StoryCard({
           <HeartIcon size={14} />
           <span>{heartCount}</span>
         </button>
-        <CommentSection postId={story.id} commentCount={story.replies} />
+        <CommentToggle
+          commentCount={story.replies}
+          isOpen={commentsOpen}
+          onToggle={() => setCommentsOpen(!commentsOpen)}
+        />
       </div>
+      {commentsOpen && (
+        <CommentPanel postId={story.id} />
+      )}
     </article>
   );
 }

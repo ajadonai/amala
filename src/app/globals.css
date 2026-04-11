@@ -2879,12 +2879,8 @@ html { scroll-behavior: smooth; }
   transform: rotate(180deg);
 }
 
-/* ─── Comments section ─── */
-.forum-comments-section {
-  display: contents;
-}
-.forum-comments-body {
-  grid-column: 1 / -1;
+/* ─── Comments panel (renders below actions row) ─── */
+.forum-comments-panel {
   margin-top: 0.75rem;
   padding-top: 0.75rem;
   border-top: 1px solid var(--border-secondary);
@@ -2976,7 +2972,21 @@ html { scroll-behavior: smooth; }
   color: var(--ink-primary);
   outline: none;
   transition: border-color var(--transition-fast);
+  width: 100%;
   max-width: 200px;
+}
+@media (max-width: 480px) {
+  .forum-comment-name-input {
+    max-width: 100%;
+  }
+  .forum-comment-send {
+    width: 32px;
+    height: 32px;
+  }
+  .forum-comment-text-input {
+    font-size: 0.75rem;
+    padding: 0.4375rem 0.625rem;
+  }
 }
 .forum-comment-name-input:focus {
   border-color: var(--border-focus);
@@ -3037,15 +3047,14 @@ html { scroll-behavior: smooth; }
   border-width: 1.5px;
 }
 
-/* ─── Story card needs flex-wrap for comments to break to new line ─── */
+/* ─── Story actions row ─── */
 .forum-story-actions {
   display: flex;
   align-items: center;
-  gap: 1rem;
+  gap: 0.75rem;
   margin-top: 0.75rem;
   padding-top: 0.625rem;
   border-top: 1px solid var(--border-secondary);
-  flex-wrap: wrap;
 }
 
 /* ─── Load more ─── */
