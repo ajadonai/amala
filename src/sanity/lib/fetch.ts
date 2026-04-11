@@ -9,6 +9,7 @@ import {
   forumPostCountQuery,
   forumHeartsQuery,
   commentsByPostQuery,
+  allForumTagsQuery,
 } from './queries';
 
 /* ═══════════════════════════════════════════════════
@@ -59,6 +60,12 @@ export interface SanityForumComment {
 export interface ForumStats {
   postCount: number;
   totalHearts: number;
+}
+
+export interface ForumTag {
+  _id: string;
+  name: string;
+  color: string;
 }
 
 /* ═══════════════════════════════════════════════════
@@ -169,5 +176,27 @@ export async function getArticleCount(): Promise<number> {
   } catch (error) {
     console.warn('Sanity article count fetch failed:', error);
     return 0;
+  }
+}
+
+// Default tags used when CMS tags aren't set up yet
+const DEFAULT_TAGS: ForumTag[] = [
+  { _id: 'default-salary', name: 'Salary', color: '#722F37' },
+  { _id: 'default-ai', name: 'AI Tools', color: '#8B5E83' },
+  { _id: 'default-strategy', name: 'Strategy', color: '#7A9E7E' },
+  { _id: 'default-global', name: 'Global', color: '#7BA3C4' },
+  { _id: 'default-support', name: 'Support', color: '#D4846A' },
+  { _id: 'default-research', name: 'Research', color: '#C49A6C' },
+];
+
+export async function getForumTags(): Promise<ForumTag[]> {
+  if (!isSanityConfigured()) return DEFAULT_TAGS;
+
+  try {
+    const tags = await getFreshClient().fetch<ForumTag[]>(allForumTagsQuery);
+    return tags && tags.length > 0 ? tags : DEFAULT_TAGS;
+  } catch (error) {
+    console.warn('Sanity forum tags fetch failed:', error);
+    return DEFAULT_TAGS;
   }
 }

@@ -92,3 +92,13 @@ export const commentsByPostQuery = groq`
     createdAt
   }
 `;
+
+// ── Forum Tags ──
+
+export const allForumTagsQuery = groq`
+  *[_type == "forumTag"] | order(order asc) {
+    _id,
+    name,
+    color
+  }
+`;

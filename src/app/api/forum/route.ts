@@ -30,9 +30,8 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: 'Story must be 2000 characters or less' }, { status: 400 });
     }
 
-    const validTopics = ['Salary', 'AI Tools', 'Strategy', 'Global', 'Support', 'Research'];
-    if (!topic || !validTopics.includes(topic)) {
-      return NextResponse.json({ error: 'Invalid topic' }, { status: 400 });
+    if (!topic || typeof topic !== 'string' || topic.trim().length === 0 || topic.length > 30) {
+      return NextResponse.json({ error: 'Topic is required (max 30 chars)' }, { status: 400 });
     }
 
     if (!process.env.SANITY_API_WRITE_TOKEN) {

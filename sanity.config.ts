@@ -19,6 +19,10 @@ const structure = (S: StructureBuilder) =>
         .title('Forum Comments')
         .schemaType('forumComment')
         .child(S.documentTypeList('forumComment').title('Forum Comments')),
+      S.listItem()
+        .title('Forum Tags')
+        .schemaType('forumTag')
+        .child(S.documentTypeList('forumTag').title('Forum Tags')),
       S.divider(),
       S.listItem()
         .title('Site Settings')

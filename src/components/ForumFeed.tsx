@@ -26,6 +26,11 @@ export interface ForumStory {
   replies: number;
 }
 
+export interface TagInfo {
+  name: string;
+  color: string;
+}
+
 interface Comment {
   _id: string;
   displayName: string | null;
@@ -33,21 +38,17 @@ interface Comment {
   createdAt: string;
 }
 
-const TAG_COLORS: Record<string, string> = {
-  Salary: 'var(--wine-800)',
-  'AI Tools': 'var(--plum)',
-  Global: 'var(--sky)',
-  Strategy: 'var(--sage)',
-  Support: 'var(--coral)',
-  Research: 'var(--gold)',
-};
-
-const TOPIC_FILTERS = ['All', 'Salary', 'AI Tools', 'Strategy', 'Global', 'Support', 'Research'];
 const STORIES_PER_PAGE = 4;
 
 /* ═══════════════════════════════════════════════════
    HELPERS
    ═══════════════════════════════════════════════════ */
+
+function buildTagColorMap(tags: TagInfo[]): Record<string, string> {
+  const map: Record<string, string> = {};
+  tags.forEach(t => { map[t.name] = t.color; });
+  return map;
+}
 
 function commentTimeAgo(dateStr: string): string {
   const now = Date.now();
@@ -67,8 +68,8 @@ function commentTimeAgo(dateStr: string): string {
    SMALL COMPONENTS
    ═══════════════════════════════════════════════════ */
 
-function TopicPill({ tag }: { tag: string }) {
-  const color = TAG_COLORS[tag] || 'var(--wine-800)';
+function TopicPill({ tag, tagColors }: { tag: string; tagColors: Record<string, string> }) {
+  const color = tagColors[tag] || '#722F37';
   return (
     <span className="forum-topic-pill" style={{ '--topic-color': color } as React.CSSProperties}>
       <span className="forum-topic-dot" />
@@ -77,9 +78,9 @@ function TopicPill({ tag }: { tag: string }) {
   );
 }
 
-function Avatar({ displayName, tag }: { displayName: string; tag: string }) {
+function Avatar({ displayName, tag, tagColors }: { displayName: string; tag: string; tagColors: Record<string, string> }) {
   const isAnon = displayName === 'Anonymous';
-  const color = TAG_COLORS[tag] || 'var(--wine-800)';
+  const color = tagColors[tag] || '#722F37';
   return (
     <div className="forum-avatar" style={{ backgroundColor: color }}>
       {isAnon ? '?' : displayName[0].toUpperCase()}
@@ -96,9 +97,8 @@ function MiniAvatar({ displayName }: { displayName: string }) {
   );
 }
 
-function TopicSelect({ value, onChange }: { value: string; onChange: (val: string) => void }) {
+function TopicSelect({ value, onChange, tags, tagColors }: { value: string; onChange: (val: string) => void; tags: TagInfo[]; tagColors: Record<string, string> }) {
   const [open, setOpen] = useState(false);
-  const topics = TOPIC_FILTERS.filter((t) => t !== 'All');
 
   useEffect(() => {
     if (!open) return;
@@ -117,7 +117,7 @@ function TopicSelect({ value, onChange }: { value: string; onChange: (val: strin
         aria-expanded={open}
       >
         <span className="flex items-center gap-2">
-          <span className="forum-topic-dot" style={{ '--topic-color': TAG_COLORS[value] || 'var(--wine-800)' } as React.CSSProperties} />
+          <span className="forum-topic-dot" style={{ '--topic-color': tagColors[value] || '#722F37' } as React.CSSProperties} />
           {value}
         </span>
         <ChevronDownIcon size={14} className={`text-ink-faint transition-transform duration-200 ${open ? 'rotate-180' : ''}`} />
@@ -127,18 +127,18 @@ function TopicSelect({ value, onChange }: { value: string; onChange: (val: strin
         <>
           <div className="fixed inset-0 z-10" onClick={() => setOpen(false)} />
           <div className="forum-dropdown" role="listbox" aria-label="Select topic">
-            {topics.map((topic) => (
+            {tags.map((t) => (
               <button
-                key={topic}
+                key={t.name}
                 type="button"
                 role="option"
-                aria-selected={value === topic}
-                onClick={() => { onChange(topic); setOpen(false); }}
-                className={`forum-dropdown-item ${value === topic ? 'forum-dropdown-item--active' : ''}`}
+                aria-selected={value === t.name}
+                onClick={() => { onChange(t.name); setOpen(false); }}
+                className={`forum-dropdown-item ${value === t.name ? 'forum-dropdown-item--active' : ''}`}
               >
-                <span className="forum-topic-dot" style={{ '--topic-color': TAG_COLORS[topic] } as React.CSSProperties} />
-                {topic}
-                {value === topic && <CheckIcon size={13} className="ml-auto" />}
+                <span className="forum-topic-dot" style={{ '--topic-color': t.color } as React.CSSProperties} />
+                {t.name}
+                {value === t.name && <CheckIcon size={13} className="ml-auto" />}
               </button>
             ))}
           </div>
@@ -315,18 +315,20 @@ function StoryCard({
   isLiked,
   onToggleLike,
   heartCount,
+  tagColors,
 }: {
   story: ForumStory;
   isLiked: boolean;
   onToggleLike: () => void;
   heartCount: number;
+  tagColors: Record<string, string>;
 }) {
   const [commentsOpen, setCommentsOpen] = useState(false);
 
   return (
     <article className="forum-story-card">
       <div className="forum-story-meta">
-        <Avatar displayName={story.displayName} tag={story.tag} />
+        <Avatar displayName={story.displayName} tag={story.tag} tagColors={tagColors} />
         <div className="forum-story-meta-text">
           <span className="forum-story-author">{story.displayName}</span>
           <span className="forum-story-sep">&middot;</span>
@@ -335,7 +337,7 @@ function StoryCard({
             {story.timeAgo}
           </span>
         </div>
-        <TopicPill tag={story.tag} />
+        <TopicPill tag={story.tag} tagColors={tagColors} />
       </div>
       <h3 className="forum-story-title">{story.title}</h3>
       <p className="forum-story-body">{story.body}</p>
@@ -369,18 +371,23 @@ export function ForumFeed({
   stories,
   totalStories,
   totalHearts,
+  tags,
 }: {
   stories: ForumStory[];
   totalStories: number;
   totalHearts: number;
+  tags: TagInfo[];
 }) {
+  const tagColors = useMemo(() => buildTagColorMap(tags), [tags]);
+  const topicFilters = useMemo(() => ['All', ...tags.map(t => t.name)], [tags]);
+
   const [activeTag, setActiveTag] = useState('All');
   const [visibleCount, setVisibleCount] = useState(STORIES_PER_PAGE);
   const [formOpen, setFormOpen] = useState(false);
   const [storyTitle, setStoryTitle] = useState('');
   const [storyBody, setStoryBody] = useState('');
   const [displayName, setDisplayName] = useState('');
-  const [selectedTopic, setSelectedTopic] = useState('Salary');
+  const [selectedTopic, setSelectedTopic] = useState(tags[0]?.name || 'Salary');
   const [submitting, setSubmitting] = useState(false);
   const [showToast, setShowToast] = useState(false);
   const [submitError, setSubmitError] = useState('');
@@ -480,7 +487,7 @@ export function ForumFeed({
       setStoryTitle('');
       setStoryBody('');
       setDisplayName('');
-      setSelectedTopic('Salary');
+      setSelectedTopic(tags[0]?.name || 'Salary');
       setFormOpen(false);
     } catch (err) {
       setSubmitError(err instanceof Error ? err.message : 'Something went wrong. Please try again.');
@@ -517,7 +524,7 @@ export function ForumFeed({
               </span>
               <span className="forum-stat-sep">&middot;</span>
               <span className="forum-stat-inline">
-                <strong>6</strong> topics
+                <strong>{tags.length}</strong> topics
               </span>
             </div>
           </header>
@@ -553,7 +560,7 @@ export function ForumFeed({
                     </div>
                     <div>
                       <label className="forum-label">Topic</label>
-                      <TopicSelect value={selectedTopic} onChange={setSelectedTopic} />
+                      <TopicSelect value={selectedTopic} onChange={setSelectedTopic} tags={tags} tagColors={tagColors} />
                     </div>
                   </div>
                   <div className="forum-form-field">
@@ -604,7 +611,7 @@ export function ForumFeed({
           {/* ── Topic Filter ── */}
           <div className="forum-filters">
             <div className="art-tags-scroll">
-              {TOPIC_FILTERS.map((topic) => (
+              {topicFilters.map((topic) => (
                 <button
                   key={topic}
                   onClick={() => handleTagChange(topic)}
@@ -612,7 +619,7 @@ export function ForumFeed({
                   type="button"
                 >
                   {topic !== 'All' && (
-                    <span className="w-1.5 h-1.5 rounded-full inline-block flex-shrink-0" style={{ backgroundColor: TAG_COLORS[topic] }} />
+                    <span className="w-1.5 h-1.5 rounded-full inline-block flex-shrink-0" style={{ backgroundColor: tagColors[topic] }} />
                   )}
                   {topic}
                 </button>
@@ -641,6 +648,7 @@ export function ForumFeed({
                 isLiked={likedIds.has(story.id)}
                 onToggleLike={() => toggleLike(story.id)}
                 heartCount={heartCounts[story.id] ?? story.hearts}
+                tagColors={tagColors}
               />
             ))}
 

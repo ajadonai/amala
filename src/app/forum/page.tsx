@@ -1,4 +1,4 @@
-import { getAllForumPosts, getForumStats } from '@/sanity/lib/fetch';
+import { getAllForumPosts, getForumStats, getForumTags } from '@/sanity/lib/fetch';
 import { ForumFeed, type ForumStory } from '@/components/ForumFeed';
 
 export const revalidate = 10;
@@ -84,9 +84,10 @@ function timeAgo(dateStr: string): string {
    ═══════════════════════════════════════════════════ */
 
 export default async function ForumPage() {
-  const [sanityPosts, stats] = await Promise.all([
+  const [sanityPosts, stats, tags] = await Promise.all([
     getAllForumPosts(),
     getForumStats(),
+    getForumTags(),
   ]);
 
   // Convert CMS posts to feed format
@@ -107,11 +108,15 @@ export default async function ForumPage() {
   const totalStories = stats.postCount > 0 ? stats.postCount : PLACEHOLDER_STORIES.length;
   const totalHearts = stats.totalHearts > 0 ? stats.totalHearts : PLACEHOLDER_STORIES.reduce((sum, s) => sum + s.hearts, 0);
 
+  // Convert tags to the format ForumFeed expects
+  const tagList = tags.map(t => ({ name: t.name, color: t.color }));
+
   return (
     <ForumFeed
       stories={stories}
       totalStories={totalStories}
       totalHearts={totalHearts}
+      tags={tagList}
     />
   );
 }
