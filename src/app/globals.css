@@ -163,7 +163,12 @@ body {
   line-height: 1.6;
   color: var(--ink-primary);
   background-color: var(--bg-primary);
+  background-image: url("data:image/svg+xml,%3Csvg width='20' height='20' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='1' cy='1' r='0.6' fill='%23B8A8AE' fill-opacity='0.12'/%3E%3C/svg%3E");
+  background-size: 20px 20px;
   transition: color var(--transition-normal), background-color var(--transition-normal);
+}
+[data-theme="dark"] body {
+  background-image: url("data:image/svg+xml,%3Csvg width='20' height='20' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='1' cy='1' r='0.6' fill='%23F2EAED' fill-opacity='0.04'/%3E%3C/svg%3E");
 }
 
 h1, h2, h3, h4, h5, h6 {
@@ -785,6 +790,29 @@ html { scroll-behavior: smooth; }
 /* ─── Hero ─── */
 .hero-section {
   background: var(--bg-hero);
+  position: relative;
+  overflow: hidden;
+}
+.hero-section::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 60% 50% at 85% 30%, color-mix(in srgb, var(--wine-300) 15%, transparent), transparent),
+    url("data:image/svg+xml,%3Csvg width='40' height='40' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 40L40 0' stroke='%23722F37' stroke-opacity='0.05' stroke-width='0.5' fill='none'/%3E%3C/svg%3E");
+  background-size: 100% 100%, 40px 40px;
+  pointer-events: none;
+  z-index: 0;
+}
+[data-theme="dark"] .hero-section::before {
+  background:
+    radial-gradient(ellipse 60% 50% at 85% 30%, color-mix(in srgb, var(--wine-700) 20%, transparent), transparent),
+    url("data:image/svg+xml,%3Csvg width='40' height='40' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 40L40 0' stroke='%23DC7186' stroke-opacity='0.04' stroke-width='0.5' fill='none'/%3E%3C/svg%3E");
+  background-size: 100% 100%, 40px 40px;
+}
+.hero-section > * {
+  position: relative;
+  z-index: 1;
 }
 
 .hero-inner {
@@ -861,10 +889,19 @@ html { scroll-behavior: smooth; }
   position: relative;
   z-index: 1;
   padding: 2rem;
-  background: var(--bg-card);
+  background:
+    url("data:image/svg+xml,%3Csvg width='20' height='20' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='10' cy='10' r='0.5' fill='%23722F37' fill-opacity='0.04'/%3E%3C/svg%3E"),
+    var(--bg-card);
+  background-size: 20px 20px, auto;
   border-radius: var(--radius-xl);
   box-shadow: var(--shadow-lg);
   border: 1px solid var(--border-secondary);
+}
+[data-theme="dark"] .hero-quote {
+  background:
+    url("data:image/svg+xml,%3Csvg width='20' height='20' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='10' cy='10' r='0.5' fill='%23DC7186' fill-opacity='0.03'/%3E%3C/svg%3E"),
+    var(--bg-card);
+  background-size: 20px 20px, auto;
 }
 
 .hero-quote-mark {
@@ -970,9 +1007,18 @@ html { scroll-behavior: smooth; }
   text-align: center;
   padding: 1.5rem 1rem;
   border-radius: var(--radius-lg);
-  background: var(--bg-card);
+  background:
+    url("data:image/svg+xml,%3Csvg width='16' height='16' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 16L16 0M-4 4L4 -4M12 20L20 12' stroke='%23722F37' stroke-opacity='0.04' stroke-width='0.5' fill='none'/%3E%3C/svg%3E"),
+    var(--bg-card);
+  background-size: 16px 16px, auto;
   border: 1px solid var(--border-secondary);
   box-shadow: var(--shadow-card);
+}
+[data-theme="dark"] .stat-card {
+  background:
+    url("data:image/svg+xml,%3Csvg width='16' height='16' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 16L16 0M-4 4L4 -4M12 20L20 12' stroke='%23DC7186' stroke-opacity='0.04' stroke-width='0.5' fill='none'/%3E%3C/svg%3E"),
+    var(--bg-card);
+  background-size: 16px 16px, auto;
 }
 
 .stat-value {
@@ -1041,6 +1087,21 @@ html { scroll-behavior: smooth; }
   box-shadow: var(--shadow-wine);
   padding: 2rem;
   overflow: hidden;
+  position: relative;
+}
+.cta-banner::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(circle at 90% 20%, rgba(255,255,255,0.08) 0%, transparent 50%),
+    url("data:image/svg+xml,%3Csvg width='24' height='24' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='12' cy='12' r='1' fill='%23fff' fill-opacity='0.06'/%3E%3C/svg%3E");
+  background-size: 100% 100%, 24px 24px;
+  pointer-events: none;
+}
+.cta-banner > * {
+  position: relative;
+  z-index: 1;
 }
 
 .cta-content {
@@ -1332,6 +1393,12 @@ html { scroll-behavior: smooth; }
 .articles-page {
   padding-top: 2rem;
   padding-bottom: 3rem;
+  background-image: url("data:image/svg+xml,%3Csvg width='28' height='28' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M14 2L26 14L14 26L2 14Z' fill='none' stroke='%23722F37' stroke-opacity='0.03' stroke-width='0.5'/%3E%3C/svg%3E");
+  background-size: 28px 28px;
+}
+[data-theme="dark"] .articles-page {
+  background-image: url("data:image/svg+xml,%3Csvg width='28' height='28' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M14 2L26 14L14 26L2 14Z' fill='none' stroke='%23DC7186' stroke-opacity='0.025' stroke-width='0.5'/%3E%3C/svg%3E");
+  background-size: 28px 28px;
 }
 
 /* ─── Page header ─── */
@@ -1773,6 +1840,12 @@ html { scroll-behavior: smooth; }
 .survey-page {
   padding-top: 2rem;
   padding-bottom: 3rem;
+  background-image: url("data:image/svg+xml,%3Csvg width='32' height='32' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 16h32M16 0v32' stroke='%23722F37' stroke-opacity='0.025' stroke-width='0.5' fill='none'/%3E%3C/svg%3E");
+  background-size: 32px 32px;
+}
+[data-theme="dark"] .survey-page {
+  background-image: url("data:image/svg+xml,%3Csvg width='32' height='32' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 16h32M16 0v32' stroke='%23DC7186' stroke-opacity='0.02' stroke-width='0.5' fill='none'/%3E%3C/svg%3E");
+  background-size: 32px 32px;
 }
 
 /* ─── Header ─── */
@@ -2322,6 +2395,12 @@ html { scroll-behavior: smooth; }
 .forum-page {
   padding-top: 2rem;
   padding-bottom: 3rem;
+  background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M30 5 Q50 15 55 30 Q50 50 30 55 Q10 50 5 30 Q10 15 30 5Z' fill='none' stroke='%23722F37' stroke-opacity='0.03' stroke-width='0.5'/%3E%3C/svg%3E");
+  background-size: 60px 60px;
+}
+[data-theme="dark"] .forum-page {
+  background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M30 5 Q50 15 55 30 Q50 50 30 55 Q10 50 5 30 Q10 15 30 5Z' fill='none' stroke='%23DC7186' stroke-opacity='0.025' stroke-width='0.5'/%3E%3C/svg%3E");
+  background-size: 60px 60px;
 }
 
 /* ─── Header ─── */
@@ -3356,6 +3435,22 @@ html { scroll-behavior: smooth; }
 
 .community-card {
   padding: 1.25rem 1.5rem;
+  position: relative;
+  overflow: hidden;
+}
+.community-card::after {
+  content: '';
+  position: absolute;
+  top: -20px;
+  right: -20px;
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  background: radial-gradient(circle, color-mix(in srgb, var(--wine-200) 25%, transparent), transparent 70%);
+  pointer-events: none;
+}
+[data-theme="dark"] .community-card::after {
+  background: radial-gradient(circle, color-mix(in srgb, var(--wine-800) 20%, transparent), transparent 70%);
 }
 
 .community-quote {
@@ -3844,6 +3939,28 @@ html { scroll-behavior: smooth; }
   gap: 1.5rem;
   align-items: flex-start;
   padding: 2rem;
+  position: relative;
+  overflow: hidden;
+}
+.founder-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 40% 60% at 95% 15%, color-mix(in srgb, var(--wine-200) 18%, transparent), transparent),
+    url("data:image/svg+xml,%3Csvg width='24' height='24' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='12' cy='12' r='0.6' fill='%23722F37' fill-opacity='0.03'/%3E%3C/svg%3E");
+  background-size: 100% 100%, 24px 24px;
+  pointer-events: none;
+}
+[data-theme="dark"] .founder-card::before {
+  background:
+    radial-gradient(ellipse 40% 60% at 95% 15%, color-mix(in srgb, var(--wine-800) 15%, transparent), transparent),
+    url("data:image/svg+xml,%3Csvg width='24' height='24' xmlns='http://www.w3.org/2000/svg'%3E%3Ccircle cx='12' cy='12' r='0.6' fill='%23DC7186' fill-opacity='0.025'/%3E%3C/svg%3E");
+  background-size: 100% 100%, 24px 24px;
+}
+.founder-card > * {
+  position: relative;
+  z-index: 1;
 }
 
 .founder-avatar {
